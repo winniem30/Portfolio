@@ -7,6 +7,7 @@
 <meta name="description" content="Portfolio of Tejaswini Medandrao, final-year Computer Science &amp; Engineering student — healthcare AI, secure pipelines, and applied ML.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
 :root{
   --bg:#FAFAF7;
@@ -231,14 +232,186 @@ footer{padding:2rem 0;}
   .hero-ctas{flex-direction:column;align-items:stretch;}
   .btn{justify-content:center;}
 }
+
+/* =========================================================
+   GAME MODE / INTERACTIVE PORTFOLIO LAYER
+   ========================================================= */
+:root{
+  --game-accent:#6d5dfc;
+  --game-cyan:#20d9ff;
+  --game-pink:#ff4fd8;
+  --game-green:#43f59a;
+  --game-glow:0 0 24px rgba(109,93,252,.22);
+}
+body.game-mode{
+  background:
+    radial-gradient(circle at 15% 10%, rgba(109,93,252,.08), transparent 28%),
+    radial-gradient(circle at 85% 20%, rgba(32,217,255,.06), transparent 25%),
+    var(--bg);
+}
+body.game-mode::before{
+  content:"";
+  position:fixed; inset:0; pointer-events:none; z-index:9990;
+  opacity:.12;
+  background-image:
+    linear-gradient(rgba(109,93,252,.18) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(109,93,252,.18) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:linear-gradient(to bottom,black,transparent 80%);
+}
+.game-hud{
+  position:fixed; right:18px; bottom:18px; z-index:250;
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  max-width:min(440px,calc(100vw - 36px));
+}
+.hud-pill{
+  border:1px solid rgba(109,93,252,.35);
+  background:rgba(20,22,26,.9); color:#fff;
+  border-radius:999px; padding:7px 12px;
+  font:600 .68rem var(--font-mono);
+  backdrop-filter:blur(10px); box-shadow:var(--game-glow);
+}
+.hud-pill strong{color:var(--game-cyan)}
+.hud-btn{
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(20,22,26,.92); color:#fff;
+  border-radius:999px; padding:7px 11px;
+  font:600 .68rem var(--font-mono); cursor:pointer;
+  transition:.2s transform,.2s border-color,.2s box-shadow;
+}
+.hud-btn:hover{transform:translateY(-2px);border-color:var(--game-cyan);box-shadow:0 0 18px rgba(32,217,255,.2)}
+.game-intro{
+  position:relative; overflow:hidden; border:1px solid rgba(109,93,252,.22);
+  border-radius:24px; padding:14px 18px; margin:0 0 28px;
+  background:linear-gradient(135deg,rgba(109,93,252,.08),rgba(32,217,255,.035));
+}
+.game-intro .scanline{
+  position:absolute; left:0; right:0; height:1px; top:0;
+  background:linear-gradient(90deg,transparent,var(--game-cyan),transparent);
+  animation:scan 3.5s linear infinite;
+}
+@keyframes scan{0%{transform:translateY(0)}100%{transform:translateY(110px)}}
+.quest-badge{
+  display:inline-flex; align-items:center; gap:7px;
+  font:600 .67rem var(--font-mono); letter-spacing:.06em;
+  color:var(--game-cyan); text-transform:uppercase;
+}
+.quest-badge::before{content:"◆";animation:pulseDot 1.4s infinite}
+@keyframes pulseDot{50%{opacity:.25;transform:scale(.75)}}
+.xp-wrap{height:7px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-top:9px}
+.xp-bar{
+  height:100%; width:0%; border-radius:99px;
+  background:linear-gradient(90deg,var(--game-accent),var(--game-cyan));
+  box-shadow:0 0 14px rgba(32,217,255,.35);
+  transition:width .8s cubic-bezier(.2,.8,.2,1);
+}
+#gameCanvas{
+  position:fixed; inset:0; z-index:9980; pointer-events:none; opacity:.0;
+  transition:opacity .3s;
+}
+body.game-mode #gameCanvas{opacity:.72}
+.float-orb{
+  position:absolute; width:80px; height:80px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff,var(--game-cyan) 8%,rgba(32,217,255,.08) 45%,transparent 70%);
+  filter:blur(.3px); opacity:.5; pointer-events:none;
+  animation:floatOrb 7s ease-in-out infinite;
+}
+.orb-a{right:8%;top:9%}.orb-b{right:35%;bottom:6%;width:46px;height:46px;animation-delay:-2s}
+@keyframes floatOrb{50%{transform:translate(22px,-18px) scale(1.08)}}
+.game-card{
+  position:relative; transform-style:preserve-3d;
+  transition:transform .16s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.game-card:hover{box-shadow:0 18px 50px rgba(109,93,252,.13);border-color:rgba(109,93,252,.38)}
+.game-card::after{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+  background:linear-gradient(120deg,transparent 25%,rgba(255,255,255,.16),transparent 75%);
+  transform:translateX(-120%); transition:transform .5s;
+}
+.game-card:hover::after{transform:translateX(120%)}
+.project-filter{
+  display:flex; gap:8px; flex-wrap:wrap; margin:0 0 22px;
+}
+.project-filter button{
+  border:1px solid var(--line); background:var(--surface);
+  color:var(--ink-soft); border-radius:999px; padding:7px 12px;
+  font:600 .72rem var(--font-mono); cursor:pointer;
+}
+.project-filter button.active,.project-filter button:hover{
+  background:var(--ink); color:#fff; border-color:var(--ink);
+}
+.project-filter button:focus-visible{outline:2px solid var(--game-cyan);outline-offset:3px}
+.hidden-project{display:none!important}
+.skill-card.game-card{cursor:default}
+.skill-chip[data-skill]{
+  cursor:pointer; transition:.18s transform,.18s background,.18s color;
+}
+.skill-chip[data-skill]:hover{transform:translateY(-2px);background:var(--game-accent);color:#fff}
+.game-stat-table td,.game-stat-table th{vertical-align:middle}
+.form-feedback{display:none;margin-top:12px}
+.form-feedback.show{display:block}
+.contact-form{
+  max-width:760px; margin:28px auto 0; text-align:left;
+  padding:22px; border:1px solid rgba(255,255,255,.12);
+  border-radius:16px; background:rgba(255,255,255,.045);
+}
+.contact-form .form-label{color:#dce1ea;font:600 .72rem var(--font-mono)}
+.contact-form .form-control,.contact-form .form-select{
+  background:rgba(255,255,255,.06); color:#fff;
+  border-color:rgba(255,255,255,.15);
+}
+.contact-form .form-control::placeholder{color:#9ca3af}
+.contact-form .form-control:focus{
+  background:rgba(255,255,255,.08);color:#fff;border-color:var(--game-cyan);
+  box-shadow:0 0 0 .2rem rgba(32,217,255,.1);
+}
+.modal-content.game-modal{
+  background:#11131a;color:#fff;border:1px solid rgba(109,93,252,.35);
+  box-shadow:0 25px 80px rgba(0,0,0,.45);
+}
+.game-modal .modal-header{border-color:rgba(255,255,255,.1)}
+.game-modal .modal-footer{border-color:rgba(255,255,255,.1)}
+.level-up{
+  position:fixed; left:50%; top:16%; z-index:10000;
+  transform:translate(-50%,-20px) scale(.96); opacity:0; pointer-events:none;
+  background:linear-gradient(135deg,#151827,#20264a);
+  color:#fff; border:1px solid rgba(32,217,255,.5); border-radius:18px;
+  padding:18px 24px; text-align:center; box-shadow:0 20px 70px rgba(0,0,0,.35);
+  transition:.35s ease;
+}
+.level-up.show{opacity:1;transform:translate(-50%,0) scale(1)}
+.level-up .small{font:600 .68rem var(--font-mono);color:var(--game-cyan);letter-spacing:.1em}
+.level-up h3{color:#fff;margin:3px 0 0}
+@media(max-width:760px){
+  .game-hud{right:10px;bottom:10px}
+  .game-intro{padding:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  .float-orb,.game-intro .scanline,.quest-badge::before{animation:none!important}
+  body.game-mode::before{display:none}
+}
+
 </style>
 </head>
 <body>
 
+<canvas id="gameCanvas" aria-hidden="true"></canvas>
+<div class="level-up" id="levelUp" role="status" aria-live="polite">
+  <div class="small">QUEST COMPLETE</div>
+  <h3 id="levelUpText">+100 XP</h3>
+</div>
+<div class="game-hud" aria-label="Portfolio game controls">
+  <span class="hud-pill">XP <strong id="xpValue">0</strong></span>
+  <span class="hud-pill">LEVEL <strong id="levelValue">1</strong></span>
+  <button class="hud-btn" id="gameToggle" type="button" aria-pressed="false">GAME MODE</button>
+  <button class="hud-btn" id="themeToggle" type="button">◐ THEME</button>
+</div>
+
+
 <header>
-  <nav class="wrap" aria-label="Primary">
-    <a href="#home" class="brand">Tejaswini M.<span class="dot">.</span></a>
-    <ul class="nav-links" id="navLinks">
+  <nav class="wrap navbar navbar-expand-lg" aria-label="Primary">
+    <a href="#home" class="brand navbar-brand">Tejaswini M.<span class="dot">.</span></a>
+    <ul class="nav-links navbar-nav" id="navLinks">
       <li><a href="#home">Home</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#projects">Projects</a></li>
@@ -260,13 +433,22 @@ footer{padding:2rem 0;}
 <!-- HOME / HERO -->
 <section id="home">
   <div class="wrap">
-    <div class="hero-grid">
+    
+<div class="game-intro fade-up" aria-label="Interactive portfolio introduction">
+  <div class="scanline"></div>
+  <div class="quest-badge">Portfolio Quest // Explore • Build • Connect</div>
+  <div class="small mt-1 text-secondary">Scroll to unlock projects, skills and milestones. Click project filters to switch missions.</div>
+  <div class="xp-wrap" aria-label="Portfolio exploration progress"><div class="xp-bar" id="xpBar"></div></div>
+</div>
+
+<div class="float-orb orb-a"></div><div class="float-orb orb-b"></div>
+<div class="hero-grid">
       <div>
         <div class="hero-eyebrow">Open to Software Engineering internships &amp; new-grad roles</div>
         <h1>Tejaswini Medandrao<br><span>builds software that ships.</span></h1>
         <p class="hero-pitch">Final-year <strong>Computer Science &amp; Engineering</strong> student who moves between <strong>healthcare AI</strong>, <strong>secure CI/CD pipelines</strong>, and <strong>applied ML</strong> — from proposing and leading a healthcare digital twin platform to hardening deployment pipelines at CYFY Technologies. Currently co-authoring two research papers at Botho University, Botswana.</p>
         <div class="hero-ctas">
-          <a href="#projects" class="btn btn-primary">View Projects</a>
+          <a href="#projects" class="btn btn-primary shadow-sm">View Projects</a>
           <a href="Tejaswini_M_Resume.pdf" class="btn btn-secondary" download>Download Résumé</a>
           <a href="#contact" class="btn btn-ghost">Get in touch →</a>
         </div>
@@ -330,10 +512,18 @@ footer{padding:2rem 0;}
     <h2 class="section-title">Selected work</h2>
     <p class="section-sub">What I've built, the problem it solves, and what it took to ship it. Ordered by how much of the system I owned.</p>
 
-    <div class="proj-grid">
+    
+<div class="project-filter" role="group" aria-label="Filter projects">
+  <button type="button" class="active" data-filter="all">ALL MISSIONS</button>
+  <button type="button" data-filter="ai">AI / ML</button>
+  <button type="button" data-filter="web">WEB / FULL STACK</button>
+  <button type="button" data-filter="security">SECURITY</button>
+</div>
+<div class="proj-grid">
+
 
       <!-- PROJECT 1: Healthcare Digital Twin -->
-      <article class="proj-card featured fade-up">
+      <article class="proj-card featured fade-up game-card card" data-category="ai web">
         <div class="proj-top">
           <div>
             <h3 class="proj-name">Healthcare Digital Twin Platform</h3>
@@ -437,7 +627,7 @@ footer{padding:2rem 0;}
     </div>
 
     <!-- PROJECT 3: Money Laundering (standard, smaller) -->
-    <article class="proj-card standard fade-up">
+    <article class="proj-card standard fade-up game-card card" data-category="security">
       <div class="proj-top">
         <div>
           <h3 class="proj-name">Money Laundering Detection System</h3>
@@ -655,6 +845,31 @@ footer{padding:2rem 0;}
   </div>
 </section>
 
+
+<!-- INTERACTIVE TELEMETRY -->
+<section id="telemetry">
+  <div class="wrap">
+    <div class="eyebrow">Mission Control</div>
+    <h2 class="section-title">Portfolio telemetry</h2>
+    <p class="section-sub">Live portfolio telemetry that updates as you explore projects and discover skills.</p>
+    <div class="table-responsive fade-up">
+      <table class="table table-hover align-middle game-stat-table">
+        <thead>
+          <tr><th scope="col">Metric</th><th scope="col">Current</th><th scope="col">Status</th></tr>
+        </thead>
+        <tbody id="telemetryBody">
+          <tr><td>Projects explored</td><td id="projectsExplored">0</td><td><span class="badge text-bg-primary">TRACKING</span></td></tr>
+          <tr><td>Skills discovered</td><td id="skillsDiscovered">0</td><td><span class="badge text-bg-success">ONLINE</span></td></tr>
+          <tr><td>Contact form</td><td>Client-side validation</td><td><span class="badge text-bg-warning">READY</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert alert-primary mt-3" role="alert">
+      <strong>System online.</strong> Explore the portfolio to update the live mission stats.
+    </div>
+  </div>
+</section>
+
 <!-- EDUCATION -->
 <section id="education">
   <div class="wrap">
@@ -677,14 +892,52 @@ footer{padding:2rem 0;}
 <!-- CONTACT -->
 <section id="contact">
   <div class="wrap">
-    <div class="contact-card fade-up">
+    <div class="contact-card fade-up card border-0">
       <h2>Let's build something.</h2>
       <p>Open to Software Engineering internships and new-grad roles — happy to talk about any of the projects above in more detail.</p>
       <div class="contact-btns">
         <a href="mailto:tejaswinim446@gmail.com" class="c-btn primary">Email Me</a>
-        <a href="http://github.com/winniem30" target="_blank" rel="noopener" class="c-btn outline">GitHub</a>
+        <a href="https://github.com/winniem30" target="_blank" rel="noopener" class="c-btn outline">GitHub</a>
         <a href="http://www.linkedin.com/in/tejaswinimd" target="_blank" rel="noopener" class="c-btn outline">LinkedIn</a>
         <a href="Tejaswini_M_Resume.pdf" class="c-btn outline" download>Download Résumé</a>
+      
+<form class="contact-form needs-validation" id="contactForm" novalidate>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label for="visitorName" class="form-label">YOUR NAME</label>
+      <input type="text" class="form-control" id="visitorName" placeholder="Enter your name" required minlength="2">
+      <div class="invalid-feedback">Please enter at least 2 characters.</div>
+    </div>
+    <div class="col-md-6">
+      <label for="visitorEmail" class="form-label">EMAIL</label>
+      <input type="email" class="form-control" id="visitorEmail" placeholder="you@example.com" required>
+      <div class="invalid-feedback">Please enter a valid email address.</div>
+    </div>
+    <div class="col-12">
+      <label for="visitorTopic" class="form-label">MISSION TYPE</label>
+      <select class="form-select" id="visitorTopic" required>
+        <option value="" selected disabled>Choose one...</option>
+        <option>Internship / Job</option>
+        <option>Project Collaboration</option>
+        <option>Research</option>
+        <option>Just saying hello</option>
+      </select>
+      <div class="invalid-feedback">Please select a topic.</div>
+    </div>
+    <div class="col-12">
+      <label for="visitorMessage" class="form-label">MESSAGE</label>
+      <textarea class="form-control" id="visitorMessage" rows="4" placeholder="Tell me what you're building..." required minlength="10"></textarea>
+      <div class="invalid-feedback">Please enter at least 10 characters.</div>
+    </div>
+    <div class="col-12 d-flex justify-content-between align-items-center gap-3 flex-wrap">
+      <button class="btn btn-primary shadow-sm" type="submit">SEND MISSION →</button>
+      <div class="alert alert-success form-feedback mb-0 py-2 px-3" id="formSuccess" role="alert">
+        Message validated successfully — ready to send.
+      </div>
+    </div>
+  </div>
+</form>
+
       </div>
     </div>
   </div>
@@ -697,7 +950,7 @@ footer{padding:2rem 0;}
     <div class="footer-text">© 2026 Tejaswini Medandrao</div>
     <div class="footer-links">
       <a href="mailto:tejaswinim446@gmail.com">tejaswinim446@gmail.com</a>
-      <a href="http://github.com/winniem30" target="_blank" rel="noopener">github.com/winniem30</a>
+      <a href="https://github.com/winniem30" target="_blank" rel="noopener">github.com/winniem30</a>
     </div>
   </div>
 </footer>
@@ -734,6 +987,184 @@ const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
 }, { threshold: 0.08 });
 document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+/* =========================================================
+   INTERACTIVE GAME LAYER
+   ========================================================= */
+const gameState = {
+  xp: 0,
+  level: 1,
+  projectsExplored: 0,
+  skillsDiscovered: new Set(),
+  gameMode: false,
+  theme: localStorage.getItem('portfolio-theme') || 'light'
+};
+
+const xpValue = document.getElementById('xpValue');
+const levelValue = document.getElementById('levelValue');
+const xpBar = document.getElementById('xpBar');
+const levelUp = document.getElementById('levelUp');
+
+function awardXP(amount, message = `+${amount} XP`) {
+  gameState.xp += amount;
+  const newLevel = Math.floor(gameState.xp / 300) + 1;
+  if (newLevel > gameState.level) {
+    gameState.level = newLevel;
+    levelUpText.textContent = `LEVEL ${newLevel} UNLOCKED`;
+    levelUp.classList.add('show');
+    setTimeout(() => levelUp.classList.remove('show'), 1800);
+  }
+  xpValue.textContent = gameState.xp;
+  levelValue.textContent = gameState.level;
+  xpBar.style.width = `${Math.min(100, (gameState.xp % 300) / 3)}%`;
+  if (message && newLevel === gameState.level) {
+    levelUpText.textContent = message;
+  }
+}
+const levelUpText = document.getElementById('levelUpText');
+
+document.getElementById('gameToggle').addEventListener('click', function(){
+  gameState.gameMode = !gameState.gameMode;
+  document.body.classList.toggle('game-mode', gameState.gameMode);
+  this.setAttribute('aria-pressed', gameState.gameMode);
+  this.textContent = gameState.gameMode ? 'EXIT GAME' : 'GAME MODE';
+  awardXP(25, gameState.gameMode ? '+25 XP — GAME MODE' : '+25 XP — EXPLORER');
+});
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const dark = document.body.dataset.theme === 'dark';
+  document.body.dataset.theme = dark ? 'light' : 'dark';
+  localStorage.setItem('portfolio-theme', dark ? 'light' : 'dark');
+  document.documentElement.style.setProperty('--bg', dark ? '#FAFAF7' : '#0d1017');
+  document.documentElement.style.setProperty('--surface', dark ? '#FFFFFF' : '#151923');
+  document.documentElement.style.setProperty('--surface-2', dark ? '#F1F1EC' : '#202532');
+  document.documentElement.style.setProperty('--ink', dark ? '#14161A' : '#F4F7FB');
+  document.documentElement.style.setProperty('--ink-soft', dark ? '#4A4F58' : '#B5BECC');
+  document.documentElement.style.setProperty('--ink-faint', dark ? '#8A8F98' : '#7E899A');
+  document.documentElement.style.setProperty('--line', dark ? '#E3E3DD' : '#2B3240');
+  document.documentElement.style.setProperty('--line-strong', dark ? '#CBCBC3' : '#3A4353');
+  awardXP(15, '+15 XP — THEME SWITCH');
+});
+
+if (gameState.theme === 'dark') {
+  document.body.dataset.theme = 'dark';
+  document.documentElement.style.setProperty('--bg', '#0d1017');
+  document.documentElement.style.setProperty('--surface', '#151923');
+  document.documentElement.style.setProperty('--surface-2', '#202532');
+  document.documentElement.style.setProperty('--ink', '#F4F7FB');
+  document.documentElement.style.setProperty('--ink-soft', '#B5BECC');
+  document.documentElement.style.setProperty('--ink-faint', '#7E899A');
+  document.documentElement.style.setProperty('--line', '#2B3240');
+  document.documentElement.style.setProperty('--line-strong', '#3A4353');
+}
+
+const filterButtons = document.querySelectorAll('.project-filter button');
+const projectCards = document.querySelectorAll('.proj-card[data-category]');
+filterButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    filterButtons.forEach(b => b.classList.remove('active'));
+    button.classList.add('active');
+    const filter = button.dataset.filter;
+    projectCards.forEach(card => {
+      const show = filter === 'all' || card.dataset.category.split(' ').includes(filter);
+      card.classList.toggle('hidden-project', !show);
+    });
+    awardXP(20, `+20 XP — ${button.textContent.trim()}`);
+  });
+});
+
+document.querySelectorAll('.proj-card').forEach(card => {
+  card.addEventListener('click', () => {
+    if (!card.dataset.visited) {
+      card.dataset.visited = 'true';
+      gameState.projectsExplored++;
+      document.getElementById('projectsExplored').textContent = gameState.projectsExplored;
+      awardXP(40, '+40 XP — PROJECT DISCOVERED');
+    }
+  });
+
+  card.addEventListener('pointermove', e => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - .5;
+    const y = (e.clientY - rect.top) / rect.height - .5;
+    card.style.transform = `perspective(900px) rotateX(${(-y * 4).toFixed(2)}deg) rotateY(${(x * 5).toFixed(2)}deg) translateY(-3px)`;
+  });
+  card.addEventListener('pointerleave', () => card.style.transform = '');
+});
+
+document.querySelectorAll('[data-skill]').forEach(skill => {
+  skill.addEventListener('click', () => {
+    const name = skill.dataset.skill;
+    if (!gameState.skillsDiscovered.has(name)) {
+      gameState.skillsDiscovered.add(name);
+      document.getElementById('skillsDiscovered').textContent = gameState.skillsDiscovered.size;
+      awardXP(10, `+10 XP — ${name.toUpperCase()}`);
+    }
+  });
+});
+
+const contactForm = document.getElementById('contactForm');
+if (contactForm) {
+  contactForm.addEventListener('submit', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    contactForm.classList.add('was-validated');
+
+    if (contactForm.checkValidity()) {
+      document.getElementById('formSuccess').classList.add('show');
+      awardXP(75, '+75 XP — CONTACT QUEST COMPLETE');
+      contactForm.reset();
+      contactForm.classList.remove('was-validated');
+    }
+  });
+}
+
+/* Floating particles — lightweight canvas animation */
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const particles = [];
+function resizeCanvas(){
+  canvas.width = innerWidth * devicePixelRatio;
+  canvas.height = innerHeight * devicePixelRatio;
+  canvas.style.width = innerWidth + 'px';
+  canvas.style.height = innerHeight + 'px';
+  ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+}
+function makeParticles(){
+  particles.length = 0;
+  const count = Math.min(65, Math.floor(innerWidth / 22));
+  for(let i=0;i<count;i++){
+    particles.push({
+      x:Math.random()*innerWidth, y:Math.random()*innerHeight,
+      r:Math.random()*1.7+.4, vx:(Math.random()-.5)*.18, vy:(Math.random()-.5)*.18,
+      a:Math.random()*.55+.15
+    });
+  }
+}
+function animateParticles(){
+  ctx.clearRect(0,0,innerWidth,innerHeight);
+  if(gameState.gameMode && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    for(const p of particles){
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<0||p.x>innerWidth)p.vx*=-1;
+      if(p.y<0||p.y>innerHeight)p.vy*=-1;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(32,217,255,${p.a})`;
+      ctx.fill();
+    }
+  }
+  requestAnimationFrame(animateParticles);
+}
+resizeCanvas(); makeParticles(); animateParticles();
+addEventListener('resize',()=>{resizeCanvas();makeParticles()});
+
+/* Make skill chips interactive */
+document.querySelectorAll('.skill-chip').forEach(chip => {
+  if (!chip.dataset.skill) chip.dataset.skill = chip.textContent.trim();
+});
+
 </script>
 </body>
 </html>
